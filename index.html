@@ -10,6 +10,41 @@
 </head>
 
 <body>
+  <div class='container'>
+    <div class='labels'>
+      <p>Filter List</p>
+      <div>
+        <button>outdoor</button>
+        <button>indoor</button>
+        <button>money</button>
+        <button>solo</button>
+      </div>
+      <br />
+      <div>
+        <button>Deselect All</button>
+      </div>
+    </div>
+    <div>
+      <input type="text" id="inputItem">
+      <button onclick="addItem()">Add</button>
+    </div>
+    <div>
+      <p>The List</p>
+      <ul id='list'>
+
+      </ul>
+
+      <!-- modal -->
+      <div id="myModal" class="modal">
+        <!-- Modal content -->
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Some text in the Modal..</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
   <script src="script.js"></script>
 </body>
 
