@@ -1,11 +1,28 @@
 const labels = ['outdoor', 'indoor', 'money', 'solo'];
-const tasks = [];
+// approach #1
+const tasks = [];  // {desc, labels}
+
+// appraoch 2: localstorage list all items
+for (let i = 0; i < localStorage.length; i++) {
+  const itemDesc = JSON.parse(localStorage.getItem(localStorage.key(i))).desc;
+
+  // console.log('itemDesc: ', itemDesc.desc);
+
+  const list = document.getElementById('list');
+  const li = document.createElement('li');
+
+  li.innerHTML = itemDesc;
+  li.setAttribute('onclick', 'openItemModal(this)');
+  li.setAttribute('class', 'list-item');
+
+  list.appendChild(li);
+}
 
 // modal
 const modal = document.getElementById("myModal");
 
 // Get the <span> element that closes the modal
-const span = document.getElementsByClassName("close")[0];
+const closeModalSpan = document.getElementById('closeModal');
 
 const inputItem = document.getElementById('inputItem');
 let addedInput;
@@ -13,40 +30,51 @@ let addedInput;
 function addItem() {
   addedInput = inputItem.value;
 
-  const list = document.getElementById('list');
-  const li = document.createElement('li');
+  if (!localStorage.getItem(addedInput)) {
+    const list = document.getElementById('list');
+    const li = document.createElement('li');
 
-  li.innerHTML = addedInput;
-  li.setAttribute('onclick', 'linkLabels(this)');
-  li.setAttribute('class', 'list-item');
+    li.innerHTML = addedInput;
+    li.setAttribute('onclick', 'openItemModal(this)');
+    li.setAttribute('class', 'list-item');
 
-  list.appendChild(li);
+    list.appendChild(li);
 
-  const taskObj = {
-    desc: addedInput,
-    labels: labels
+    const taskObj = {
+      desc: addedInput,
+      labels: labels
+    }
+
+    // approach #1: save as object
+    tasks.push(taskObj);
+    console.log('all tasks: ', tasks);
+
+    // approach #2: save in localstorage
+    localStorage.setItem(addedInput, JSON.stringify(taskObj));
+    console.log('localStorage: ', localStorage);
   }
-
-  tasks.push(taskObj);
-  console.log(tasks);
 }
 
-function linkLabels(that) {
+// modal
+function openItemModal(that) {
 
-  console.log('item: ', that);
-  // When the user clicks the item, open the modal 
-  // that.onclick = function () {
-  //   modal.style.display = "block";
-  // }
+  console.log('item clicked: ', that.textContent);
 
-  // that.addEventListener('click', function (e) {
-  //   modal.style.display = "block";
-  // });
+  const itemDesc = that.textContent;
+  console.log('getItem: ', JSON.parse(localStorage.getItem(itemDesc)).desc);
+  const parsedItemDesc = JSON.parse(localStorage.getItem(itemDesc)).desc;
 
+  // When the user clicks the item, display the modal
+  modal.style.display = "block";
+
+  // ul containing labels on modal
+  const itemLabelsList = document.getElementById('listItemLabels');
+  const itemHeading = document.getElementById('itemHeading');
+  itemHeading.textContent = parsedItemDesc;
 }
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+closeModalSpan.onclick = function () {
   modal.style.display = "none";
 }
 
