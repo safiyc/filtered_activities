@@ -1,57 +1,112 @@
+// data structure
+// localStorage = {desc, labels}
+// revision to make localStorage = {labels: [], items: [{desc: str, labels: []}] }
+
+console.log('local storage at page load: ', localStorage);
+
+// create labels
 const labels = ['outdoor', 'indoor', 'money', 'solo'];
-// approach #1
-const tasks = [];  // {desc, labels}
+// set labels as array to localStorage
+// localStorage.setItem('labels', JSON.stringify(labels));
+// console.log('labels localstorage', localStorage.labels);
 
-// appraoch 2: localstorage list all items
-for (let i = 0; i < localStorage.length; i++) {
-  const itemDesc = JSON.parse(localStorage.getItem(localStorage.key(i))).desc;
+// items from localStorage
+// let itemsFromStorage = [];
+let sortedItemsFromStorage = [];
 
-  // console.log('itemDesc: ', itemDesc.desc);
+function sortItems() {
 
-  const list = document.getElementById('list');
-  const li = document.createElement('li');
+  let itemsFromStorage = [];
+  sortedItemsFromStorage = [];
 
-  li.innerHTML = itemDesc;
-  li.setAttribute('onclick', 'openItemModal(this)');
-  li.setAttribute('class', 'list-item');
+  console.log('localStorage items as array: ', itemsFromStorage);
 
-  list.appendChild(li);
+  // localstorage to array
+  for (let i = 0; i < localStorage.length; i++) {
+    const item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+
+    itemsFromStorage.push(item);
+  }
+
+  // descending sort
+  sortedItemsFromStorage = itemsFromStorage.sort((a, b) => (a.desc > b.desc ? 1 : -1));
+
+  console.log('localStorage as sorted array: ', sortedItemsFromStorage);
 }
 
-// modal
-const modal = document.getElementById("myModal");
+// render all items as li
+function renderList() {
+  const list = document.getElementById('list');
+  // remove all li elements
+  while (list.firstChild) {
+    list.firstChild.remove();
+    console.log('firstchild removed: ', list.firstChild);
+  }
 
-// Get the <span> element that closes the modal
-const closeModalSpan = document.getElementById('closeModal');
+  for (let i = 0; i < sortedItemsFromStorage.length; i++) {
+    // const itemDesc = JSON.parse(localStorage.getItem(localStorage.key(i))).desc;
 
-const inputItem = document.getElementById('inputItem');
-let addedInput;
+    const itemDesc = sortedItemsFromStorage[i].desc;
 
-function addItem() {
-  addedInput = inputItem.value;
+    // console.log('itemDesc: ', itemDesc);
 
-  if (!localStorage.getItem(addedInput)) {
     const list = document.getElementById('list');
     const li = document.createElement('li');
 
-    li.innerHTML = addedInput;
+    li.innerHTML = itemDesc;
     li.setAttribute('onclick', 'openItemModal(this)');
     li.setAttribute('class', 'list-item');
 
     list.appendChild(li);
 
+    console.log('item to render: ', li);
+  }
+}
+
+function sortAndRender() {
+  sortItems();
+  renderList();
+}
+
+
+// add item to array, then localstorage
+function addItem() {
+  const inputItem = document.getElementById('inputItem').value;
+  // const addedInput = inputItem.value;
+  console.log('localStorage getItem ', localStorage.getItem(inputItem));
+  // console.log('localStorage getItem ', localStorage.getItem('items'));
+
+  if (!localStorage.getItem(inputItem)) {
+    // const list = document.getElementById('list');
+    // const li = document.createElement('li');
+
+    // li.innerHTML = addedInput;
+    // li.setAttribute('onclick', 'openItemModal(this)');
+    // li.setAttribute('class', 'list-item');
+
+    // list.appendChild(li);
+
+    // remove all li elements
+    // while (list.firstChild) {
+    //   list.firstChild.remove();
+    //   console.log('firstchild removed: ', list.firstChild);
+    // }
+
     const taskObj = {
-      desc: addedInput,
+      desc: inputItem,
       labels: labels
     }
 
-    // approach #1: save as object
-    tasks.push(taskObj);
-    console.log('all tasks: ', tasks);
+    // save to localstorage
+    localStorage.setItem(inputItem, JSON.stringify(taskObj));
+    console.log('item added to localStorage: ', localStorage);
 
-    // approach #2: save in localstorage
-    localStorage.setItem(addedInput, JSON.stringify(taskObj));
-    console.log('localStorage: ', localStorage);
+    // test: localstorage data structure
+    // localStorage.setItem('items', JSON.stringify(taskObj));
+    // console.log('item added to localStorage: ', localStorage);
+
+    // sort data and create and render li
+    sortAndRender();
   }
 }
 
@@ -73,6 +128,12 @@ function openItemModal(that) {
   itemHeading.textContent = parsedItemDesc;
 }
 
+// modal
+const modal = document.getElementById("myModal");
+
+// Get the <span> element that closes the modal
+const closeModalSpan = document.getElementById('closeModal');
+
 // When the user clicks on <span> (x), close the modal
 closeModalSpan.onclick = function () {
   modal.style.display = "none";
@@ -84,3 +145,6 @@ window.onclick = function (event) {
     modal.style.display = "none";
   }
 }
+
+
+Window.onload = sortAndRender();
