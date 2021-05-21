@@ -1,0 +1,20 @@
+-list should display sorted after new item added?
+
+-for now:
+-single list
+-localstorage
+
+-switch item's labels active, inactive
+
+-issue:
+ x-when adding item to list, list refreshes w/duplicate items until webpage is refreshed
+
+-localstorage:
+[
+  {
+    labels: []
+  },
+  {
+    activities: []
+  }
+]

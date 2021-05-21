@@ -11,19 +11,24 @@ const labels = ['outdoor', 'indoor', 'money', 'solo'];
 // console.log('labels localstorage', localStorage.labels);
 
 // items from localStorage
-// let itemsFromStorage = [];
+let itemsFromStorage = [];
 let sortedItemsFromStorage = [];
+console.log('sortedItemsFromStorage at page load: ', sortedItemsFromStorage);
 
 function sortItems() {
 
-  let itemsFromStorage = [];
+  // let itemsFromStorage = [];
   sortedItemsFromStorage = [];
 
   console.log('localStorage items as array: ', itemsFromStorage);
 
   // localstorage to array
+  // for (let i = 0; i < localStorage.items.length; i++) {
   for (let i = 0; i < localStorage.length; i++) {
+
+    // const item = JSON.parse(localStorage.getItem(localStorage.items.key(i)));
     const item = JSON.parse(localStorage.getItem(localStorage.key(i)));
+
 
     itemsFromStorage.push(item);
   }
@@ -73,8 +78,8 @@ function sortAndRender() {
 function addItem() {
   const inputItem = document.getElementById('inputItem').value;
   // const addedInput = inputItem.value;
-  console.log('localStorage getItem ', localStorage.getItem(inputItem));
-  // console.log('localStorage getItem ', localStorage.getItem('items'));
+  // console.log('localStorage getItem ', localStorage.getItem(inputItem));
+  console.log('localStorage getItem ', localStorage.getItem('items'));
 
   if (!localStorage.getItem(inputItem)) {
     // const list = document.getElementById('list');
@@ -92,23 +97,32 @@ function addItem() {
     //   console.log('firstchild removed: ', list.firstChild);
     // }
 
-    const taskObj = {
+    const itemObj = {
       desc: inputItem,
       labels: labels
     }
 
     // save to localstorage
-    localStorage.setItem(inputItem, JSON.stringify(taskObj));
+    localStorage.setItem(inputItem, JSON.stringify(itemObj));
     console.log('item added to localStorage: ', localStorage);
 
     // test: localstorage data structure
-    // localStorage.setItem('items', JSON.stringify(taskObj));
+    // localStorage.setItem('items', JSON.stringify(itemObj));
     // console.log('item added to localStorage: ', localStorage);
+    // If no existing data, create an array
+    // Otherwise, convert the localStorage string to an array
+    // sortedItemsFromStorage = sortedItemsFromStorage ? sortedItemsFromStorage.split(',') : [];
+    // Add new data to localStorage Array
+    // sortedItemsFromStorage.push(itemObj);
+    // Save back to localStorage
+    // localStorage.setItem('items', sortedItemsFromStorage.toString());
 
     // sort data and create and render li
     sortAndRender();
   }
 }
+
+// console.log('sortedItemsFromStorage after page renders: ', sortedItemsFromStorage);
 
 // modal
 function openItemModal(that) {
